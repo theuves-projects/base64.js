@@ -1,5 +1,8 @@
 'use strict';
 
+// Base64.js | (c) 2016 Matheus Alves
+// https://github.com/theuves/base64.js
+
 var Base64 = (function () {
     var chars = 'abcdefghijklmnopqrstuvwxyz';
     chars = chars.toUpperCase() + chars + '0123456789+/';
