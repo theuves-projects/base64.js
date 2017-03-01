@@ -8,24 +8,15 @@ var Base64 = (function () {
     chars = chars.toUpperCase() + chars + '0123456789+/';
 
     function toBinary(str) {
-        var bins = [];
+        var bins = str.split('');
 
-        for (var i = 0; i < str.length; i++) {
-            bins.push(str[i].charCodeAt(0).toString(2));
-        }
+        bins = bins.map(function (char) {
+            var bin = char.charCodeAt(0).toString(2);
 
-        var binarios = [];
-
-        bins.forEach(function (i) {
-            if (i.length < 8) {
-                binarios.push('0'.repeat(8 - i.length) + i);
-            } else {
-                binarios.push(i);
-            }
+            return '0'.repeat(8 - bin.length) + bin;
         });
 
-        str = binarios.join('');
-        return str;
+        return bins.join('');
     }
 
     function encode(str) {
