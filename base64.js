@@ -1,9 +1,9 @@
-'use strict';
-
-// Base64.js | (c) 2016 Matheus Alves
-// https://github.com/theuves/base64.js
-
 var Base64 = (function () {
+    'use strict';
+
+    // Base64.js
+    // (c) 2016-17 @theuves
+
     var chars = 'abcdefghijklmnopqrstuvwxyz';
     chars = chars.toUpperCase() + chars + '0123456789+/';
 

@@ -1,14 +1,7 @@
 # Base64.js
 # Base64 encode and decode.
 
-USAGE:
-------
+EXAMPLES:
 
-    Base64 // -> Object
-    Base64.encode // -> function (str)
-    Base64.decode // -> function (str)
-
-LICENSE:
---------
-
-MIT (c) @theuves
+  Base64.encode('Hi!'); // 'SGkh'
+  Base64.decode('SGkh'); // 'Hi!'
