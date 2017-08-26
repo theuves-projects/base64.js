@@ -76,7 +76,7 @@ var Base64 = (function () {
             binarios.push(bin)
         }
 
-        binarios = binarios.join('').match(/.{8}|(.*)$/g);;
+        binarios = binarios.join('').match(/.{8}|(.*)$/g);
 
         binarios = binarios.slice(0, binarios.length - 1);
 
