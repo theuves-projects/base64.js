@@ -1,100 +1,56 @@
-var Base64 = (function () {
-    'use strict';
+const Base64 = (function () {
+  const chars = [
+    ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    ...'abcdefghijklmnopqrstuvwxyz',
+    ...'0123456789',
+    ...'+/'
+  ]
 
-    // Base64.js
-    // (c) 2016-17 @theuves
+  function str2bin(str) {
+    return str.replace(/./g, (char) => {
+      return char
+        .codePointAt()
+        .toString(2)
+        .padStart(8, '0')
+    })
+  }
 
-    var chars = 'abcdefghijklmnopqrstuvwxyz';
-    chars = chars.toUpperCase() + chars + '0123456789+/';
+  function encode(str) {
+    const base = str2bin(str)
+      .split(/(\d{6})/g)
+      .filter(Boolean)
+      .map((bin) => bin.padEnd(6, '0'))
+      .map((bin) => parseInt(bin, 2))
+      .map((i) => chars[i])
+      .join('')
 
-    function toBinary(str) {
-        var bins = str.split('');
-
-        bins = bins.map(function (char) {
-            var bin = char.charCodeAt(0).toString(2);
-
-            return '0'.repeat(8 - bin.length) + bin;
-        });
-
-        return bins.join('');
+    switch (str.length % 4) {
+      case 0:
+        return base + '=='
+      case 1:
+        return base + '='
+      default:
+        return base
     }
+  }
 
-    function encode(str) {
-        if (!str) return;
+  function decode(str) {
+    return str.replace(/=+$/, '')
+      .replace(/./g, (char) => {
+        return chars
+          .findIndex((c) => char === c)
+          .toString(2)
+          .padStart(6, '0')
+      })
+      .split(/(\d{8})/g)
+      .filter((bin) => bin.length === 8)
+      .map((bin) => parseInt(bin, 2))
+      .map((dec) => String.fromCodePoint(dec))
+      .join('')
+  }
 
-        str = str.toString();
-
-        var binario = toBinary(str);
-        var separados = binario.match(/.{6}|(.+)$/g);
-        var indices = [];
-
-        separados.forEach(function (i, n) {
-            if (n === separados.length - 1 && i.length < 6) {
-                indices.push(parseInt(i + '0'.repeat(6 - i.length), 2));
-            } else {
-                indices.push(parseInt(i, 2));
-            }
-        });
-
-        var codificado = '';
-
-        indices.forEach(function (i) {
-            codificado += chars[i];
-        });
-
-        if (codificado.length % 4 === 2) codificado = codificado + '==';
-        if (codificado.length % 4 === 3) codificado = codificado + '=';
-
-        return codificado;
-    }
-
-    function dec(caractere) {
-        for (var i = 0; i < chars.length; i++) {
-            if (chars[i] === caractere) {
-                return i;
-            }
-        }
-    }
-
-    function decode(str) {
-        if (!str) return;
-
-        str = str.toString();
-
-        if (!/^[a-zA-Z0-9\/\+\=]*$/.test(str) || str.length < 2) {
-            return undefined;
-        }
-
-        str = str.replace(/\=*$/, '');
-        var binarios = [];
-
-        for (var i = 0; i < str.length; i++) {
-            var bin = dec(str[i]).toString(2);
-
-            bin = '0'.repeat(6 - bin.length) + bin;
-
-            binarios.push(bin)
-        }
-
-        binarios = binarios.join('').match(/.{8}|(.*)$/g);
-
-        binarios = binarios.slice(0, binarios.length - 1);
-
-        var decodificado = [];
-
-        for (var i = 0; i < binarios.length; i++) {
-            var charcode = parseInt(binarios[i], 2).toString(10);
-
-            decodificado.push(String.fromCharCode(charcode));
-        }
-
-        decodificado = decodificado.join('');
-
-        return decodificado;
-    }
-
-    return {
-        encode: encode,
-        decode: decode
-    };
-})();
+  return {
+    encode: encode,
+    decode: decode
+  }
+})()
